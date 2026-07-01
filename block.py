@@ -24,7 +24,7 @@ class Block:
 		self.evidence_id = event["evidence_id"]					
 		self.signer_id = event.get("signer_id") or event.get("device_id")		#non cryptographic unique identifier
 		self.signature = event.get("signature")									#cryptographic private signature uses ec-secp256
-		self.public_key = event.get("public_key")					#cryptographic public key 
+		self.public_key = event.get("public_key")								#cryptographic public key 
 		self.source_type = event.get("source_type")								#meta data for initial evidence uploads (bodycam, cctv, etc)
 		self.evidence_hash = event.get("evidence_hash")							#cryptographic hash of evidencde
 		self.events = event.get("action")										#evidence transactions and interaction types (accessed, copied, analyzed, transferred)
@@ -43,7 +43,8 @@ class Block:
 			"signer_id": self.signer_id,
 			"source_type": self.source_type,
 			"evidence_hash": self.evidence_hash,
-			#"timestamp": self.timestamp,
+			#"timestamp": self.timestamp,										#time stamp was causing discrepencies in a test function (ldger 1 v ledger 2) 
+																				#so its commented out temporarily
 			"previous_hash": self.previous_hash,
 			"events": self.events,
 		}

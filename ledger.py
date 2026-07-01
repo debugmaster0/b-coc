@@ -3,6 +3,7 @@ from block import Block
 from blockchain import Blockchain
 from sign_util import sign_hash, verify_hash_signature
 from datetime import datetime, timezone
+import json
 
 
 class EvidenceLedger:
@@ -21,7 +22,7 @@ class EvidenceLedger:
 		if evidence_id not in self.chains:
 			self.create_chain(evidence_id)
 
-		#adding block so global counter is increased
+		#adding block so global counter is increased (always greater than 0 if ledger exists)
 		self.global_block_count += 1
 		
 		#find the chain the record belongs to, returns none if no self chain. 
@@ -31,6 +32,9 @@ class EvidenceLedger:
 		#create block, global_block_count is passed into block for its global ID, latest block used to get hash
 		new_block = Block(event, self.global_block_count, previous_block=latest_block)
 
+		####################################################
+		#####need to rework signature workflow for gui#######
+		#####################################################
 		if private_key:
 			new_block.signature = sign_hash(new_block.block_hash, private_key)
 		
@@ -47,6 +51,10 @@ class EvidenceLedger:
 		calculated_state_root = "0"
 		all_blocks = []
 		
+		if self.global_block_count == 0:
+			print("Ledger is empty. Import events first.")
+			return False
+			
 		# Step 1: Validate individual chains
 		for evidence_id, blockchain in self.chains.items():
 
@@ -62,12 +70,12 @@ class EvidenceLedger:
 		
 		#Recalc state root in the exact order they were created
 		for i, block in enumerate(all_blocks):
-			expctd_glbl_id = i + 1
+			expctd_glbl_id = i + 1 #global ID starts at 1, enumerate starts at 0
 			if block.global_id != expctd_glbl_id:
 				print(f"Validation failed: Missing/deleted block at sequence {expctd_glbl_id}")
 				return False
 				
-			state_mix = f"{calculated_state_root}{block.block_hash}"
+			state_mix = f"{calculated_state_root}{block.block_hash}" #acts like a merkle root hash
 			calculated_state_root = hashlib.sha256(state_mix.encode()).hexdigest()
 			
 		#compare stored state root vs recalc state root
@@ -129,6 +137,7 @@ class EvidenceLedger:
 			for i, block in enumerate(blockchain.chain):
 				print(f"  Block {i}")
 				print(f"    action: {block.events}")
+				print(f"    source: {block.source_type}")
 				print(f"    signer_id: {block.signer_id}")
 				print(f"    public_key: {block.public_key}")
 				print(f"    signature: {block.signature}")
@@ -137,3 +146,24 @@ class EvidenceLedger:
 				print(f"    global_id: {block.global_id}")           
 				print(f"    previous_hash: {block.previous_hash}")
 				print(f"    block_hash: {block.block_hash}")
+
+	#simulates database
+	def export_json(self, out_file):
+		data = {}
+
+		for evidence_id, blockchain in self.chains.items():
+			data[evidence_id] = []
+
+			for block in blockchain.chain:
+
+				block_data = block.__dict__.copy()
+				block_data["signature"] = str(block_data["signature"])
+				data[evidence_id].append(block_data)
+
+		with open(out_file, "w") as file:
+			json.dump(data, file, indent=2)
+
+	#simulates chain of custody actions for ledger creation or functions as database
+	def import_json(self, in_file):
+		with open(in_file, "r") as file:
+			data = json.load(file)
