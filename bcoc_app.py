@@ -330,7 +330,22 @@ class MainWindow(QMainWindow):
 			"Stored"
 		])
 
-		self.hash_input = QLineEdit()
+		#recipient menu for transfer actions
+		self.recipient_label = QLabel("Recipient")
+		self.users_dropdown = QComboBox()
+
+		for identity, data in self.users.items():
+			if data["type"] == "user":
+				self.users_dropdown.addItem(identity)
+
+		#set show recipient visible to false
+		self.recipient_label.setVisible(False)
+		self.users_dropdown.setVisible(False)
+
+		#action input from action menu is tracked and text is changed when clicked
+		self.action_input.currentTextChanged.connect(
+			self.toggle_recipient_dropdown #function to set recipient options visible
+			)
 
 		#buttons
 		submit_button = QPushButton("Add Block")
@@ -345,7 +360,7 @@ class MainWindow(QMainWindow):
 		self.evidence_id_input = QLineEdit()
 		self.evidence_id_input.setPlaceholderText("Example: evidence_001")
 		self.hash_input = QLineEdit()
-		self.hash_input.setPlaceholderText("Example: arkfj56")
+		self.hash_input.setPlaceholderText("Example: a4jf9")
 
 		hint = QLabel(
 			"Existing evidence: hash must match the original.\n"
@@ -362,6 +377,9 @@ class MainWindow(QMainWindow):
 		layout.addWidget(QLabel("Action"))
 		layout.addWidget(self.action_input)
 
+		layout.addWidget(self.recipient_label)
+		layout.addWidget(self.users_dropdown)
+
 		layout.addWidget(QLabel("Evidence Hash"))
 		layout.addWidget(self.hash_input)
 
@@ -372,11 +390,32 @@ class MainWindow(QMainWindow):
 		screen.setLayout(layout)
 		self.set_screen(screen)
 
+#---------handles recipient for transfer options in actions
+	def toggle_recipient_dropdown(self, action):
+	    transfer = action == "Transferred"
+
+	    self.recipient_label.setVisible(transfer)
+	    self.users_dropdown.setVisible(transfer)
+
 #---------adds block from add block menu to ledger, removes spaces
 	def submit_block(self):
 		evidence_id = self.evidence_id_input.text().strip()
 		action = self.action_input.currentText()
 		evidence_hash = self.hash_input.text().strip()
+
+		#recipient is non unless transferred toggled
+		#user chooses recipient from menu
+		#cannot be empty, cannot be current user
+		recipient = None
+		if action == "Transferred":
+			recipient = self.users_dropdown.currentText()
+
+			if not recipient:
+				self.status_label.setText("Select a transfer recipient")
+				return
+			if recipient == self.current_user:
+				self.status_label.setText("Cannot be current user")
+				return
 
 		#input regulation
 		if not re.fullmatch(r"[A-Za-z0-9_-]+", evidence_id) or len(evidence_id) >24:
