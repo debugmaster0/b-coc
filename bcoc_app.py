@@ -22,6 +22,21 @@ import contextlib  										  #for terminal to output_box printing
 import qdarkstyle										  #darkmode
 import re  												  #used for text input sanitization in add block
 
+
+#------------UI Format------------
+#
+#			initialize screen
+#			initialize layout QV or QH
+#			Titles and subtitles
+#           -label-
+#			Bottons and boxes
+#			-label-
+#			Events
+#			Add widgets
+#			Set layout
+#			Update screen
+#
+#
 class MainWindow(QMainWindow):
 	def __init__(self):
 		super().__init__()
@@ -133,23 +148,23 @@ class MainWindow(QMainWindow):
 
 #---------verify ledger uses ledger class fucntion to verify ledger and prints result
 	def verify_ledger(self):
-		buffer = StringIO() #buffer used to grab writes to terminal
+		buffer = StringIO() #buffer used to grab print statements to terminal
 
-		with contextlib.redirect_stdout(buffer):
+		with contextlib.redirect_stdout(buffer): #redirects print statements to buffer
 			valid = self.ledger.validate_ledger() #valid is True or False for label output context
 
-		self.output_box.setPlainText(buffer.getvalue())  #function writes to terminal are printed in output_box
+		self.output_box.setPlainText(buffer.getvalue())  #buffer printed in output_box
 		
 		if valid:
-			self.status_label.setText("Ledger Verified ✓")
+			self.status_label.setText("Ledger Verified ")
 		else:
 			self.status_label.setText("Ledger Compromised")
 
-#---------import events and creats a list of users for login simulation purposes
-	#evidence_id is used to access authorized blockchains
-	#identity_id is to aggregate device and human IDs 
-	#private keys and public keys are populated to simulate signatures
-	#type is used to keep track of whether block belongs to device or human
+#   Import events and creats a list of users for login simulation purposes
+#	Evidence_id is used to access authorized blockchains
+#	Identity_id is to aggregate device and human IDs 
+#	Private keys and public keys are populated to simulate signatures
+#	Type is used to keep track of whether block belongs to device or human
 	def import_events(self, in_file, users):
 		with open(in_file, "r") as file:
 			events = json.load(file)
@@ -199,7 +214,7 @@ class MainWindow(QMainWindow):
 		hint = QLabel(
 			"User: Letters, numbers, _, max 24 characters."
 		)
-		hint.setStyleSheet("color: white; font-size: 10px;")
+		hint.setStyleSheet("color: white; font-size: 12px;")
 
 		self.status_label = QLabel("")
 
@@ -259,7 +274,7 @@ class MainWindow(QMainWindow):
 			"type": "user"
 		}
 
-		self.status_label.setText(f"User {identity} registered successfully ✓")
+		self.status_label.setText(f"User {identity} registered successfully ")
 		self.identity_id_input.clear()
 
 		#automatic sign in after registering 
@@ -286,7 +301,7 @@ class MainWindow(QMainWindow):
 
 		self.output_box.setPlainText(output)
 
-#---------Adds block manually, this is skeletonized for simulation purposes
+#---------Adds block manually, this is skeletonized for convenience 
 	def add_block_menu(self):
 		screen = QWidget()
 		layout = QVBoxLayout()
@@ -294,7 +309,7 @@ class MainWindow(QMainWindow):
 		title = QLabel("Add Evidence")
 		title.setStyleSheet("font-size: 22px; font-weight: bold;")
 
-		self.status_label = QLabel("Ready") 
+		self.status_label = QLabel("") 
 
 		#add evidence ID
 		self.evidence_id_input = QLineEdit()
@@ -331,7 +346,7 @@ class MainWindow(QMainWindow):
 			"Evidence: Letters, numbers, _ and -, max 24 characters.\n"
 			"Hash : Letters and numbers only, max 24 characters."
 			)
-		hint.setStyleSheet("color: white; font-size: 10px;")
+		hint.setStyleSheet("color: white; font-size: 12px;")
 		layout.addWidget(hint)
 
 		layout.addWidget(QLabel("Evidence ID"))
@@ -392,7 +407,7 @@ class MainWindow(QMainWindow):
 		)
 		#update user authorized records 
 		self.users[self.current_user]["evidence_ids"].add(evidence_id)
-		self.status_label.setText("Evidence Added _ Press back to verify chain ✓")
+		self.status_label.setText("Evidence Added - Press back to verify chain ")
 
 # ------- Main -------
 
