@@ -127,7 +127,7 @@ class EvidenceLedger:
 				f"Signer: {block.signer_id} | "
 				f"Signature Verified "
 			)
-			print(f"VALID  VALID  VALID  VALID s")
+			print(f"-------VALID-------")
 
 			#state mix is current state_root hash + block hash 
 			state_mix = f"{calculated_state_root}{block.block_hash}" 

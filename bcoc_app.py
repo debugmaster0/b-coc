@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (							#widgets
 	QHBoxLayout,
 	QLineEdit
 )
+from PySide6.QtCore import Qt
 from ledger import EvidenceLedger						  #custom
 from blockchain import Blockchain						  #custom
 from block import Block						  			  #custom
@@ -30,12 +31,17 @@ import re  												  #used for text input sanitization in add block
 #			Titles and subtitles
 #           -label-
 #			Bottons and boxes
-#			-label-
 #			Events
 #			Add widgets
 #			Set layout
 #			Update screen
 #
+#
+#			Widget Ordering
+#
+#			Qlabels - text only
+#			QPushButton / QComboBox
+#			Layout addWidget - in order of appearence top down
 #
 class MainWindow(QMainWindow):
 	def __init__(self):
@@ -102,13 +108,14 @@ class MainWindow(QMainWindow):
 		self.set_screen(screen)
 
 #---------Screen that shwos after sign on or registering
-	def show_verify_menu(self):
+	def show_main_menu(self):
 		screen = QWidget()
 		layout = QVBoxLayout()
 		self.recording_dropdown = QComboBox()
 
-		title = QLabel("Verify Ledger")
+		title = QLabel("Main Menu")
 		title.setStyleSheet("font-size: 22px; font-weight: bold;")
+		title.setAlignment(Qt.AlignHCenter)
 
 		self.output_box = QTextEdit()
 		self.output_box.setReadOnly(True)
@@ -201,7 +208,7 @@ class MainWindow(QMainWindow):
 #---------change menu from sign in screen to verify menu
 	def sign_in_user(self):
 		self.current_user = self.users_dropdown.currentText()
-		self.show_verify_menu()
+		self.show_main_menu()
 
 #---------change screen from sign in to register user
 	def register_user(self):
@@ -279,7 +286,7 @@ class MainWindow(QMainWindow):
 
 		#automatic sign in after registering 
 		self.current_user = identity 
-		self.show_verify_menu()
+		self.show_main_menu()
 
 #---------prints a blockchain in verify 
 	def view_chain_of_custody(self):
@@ -287,7 +294,7 @@ class MainWindow(QMainWindow):
 		chain = self.ledger.get_chain(evidence_id)
 
 		output = f"Chain of Custody for {evidence_id}\n"
-		output += "-" * 40 + "\n"
+		output += "-------------------------------------\n"
 
 		for block in chain.chain:
 			output += f"signer_id: {block.signer_id}\n"
@@ -331,7 +338,7 @@ class MainWindow(QMainWindow):
 
 		#button events
 		submit_button.clicked.connect(self.submit_block)
-		back_button.clicked.connect(self.show_verify_menu)
+		back_button.clicked.connect(self.show_main_menu)
 
 		layout.addWidget(title)
 
