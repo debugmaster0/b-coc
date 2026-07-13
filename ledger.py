@@ -105,6 +105,7 @@ class EvidenceLedger:
 		#Recalc state root in the exact order they were created
 		for i, block in enumerate(all_blocks):
 			expctd_glbl_id = i + 1 #global ID starts at 1, enumerate starts at 0
+
 			if block.global_id != expctd_glbl_id:
 				print(f"Validation failed: Missing/deleted block at sequence {expctd_glbl_id}")
 				return False
@@ -115,6 +116,7 @@ class EvidenceLedger:
 				block.signature,
 				block.public_key
 			)
+			
 			if not signature_valid:
 				print(
 					f"Validation failed: Invalid signature on "

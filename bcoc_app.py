@@ -264,6 +264,7 @@ class MainWindow(QMainWindow):
 		if identity in self.users:
 			self.status_label.setText("Error: User already exists.")
 			return
+
 		#avoid empty user
 		if not identity:
 			self.status_label.setText("User cannot be empty.")
@@ -344,8 +345,9 @@ class MainWindow(QMainWindow):
 
 		#action input from action menu is tracked and text is changed when clicked
 		self.action_input.currentTextChanged.connect(
-			self.toggle_recipient_dropdown #function to set recipient options visible
-			)
+			#function to set recipient options visible
+			self.toggle_recipient_dropdown 
+		)
 
 		#buttons
 		submit_button = QPushButton("Add Block")
@@ -367,7 +369,7 @@ class MainWindow(QMainWindow):
 			"New evidence: enter a unique hash.\n"
 			"Evidence: Letters, numbers, _ and -, max 24 characters.\n"
 			"Hash : Letters and numbers only, max 24 characters."
-			)
+		)
 		hint.setStyleSheet("color: white; font-size: 12px;")
 		layout.addWidget(hint)
 
@@ -413,6 +415,7 @@ class MainWindow(QMainWindow):
 			if not recipient:
 				self.status_label.setText("Select a transfer recipient")
 				return
+
 			if recipient == self.current_user:
 				self.status_label.setText("Cannot be current user")
 				return
@@ -423,6 +426,7 @@ class MainWindow(QMainWindow):
 				"Evidence ID may only contain letters, numbers, _ and - :: MAX length is 24"
 			)
 			return
+
 		if not re.fullmatch(r"[A-Za-z0-9]+", evidence_hash) or len(evidence_hash) >24:
 			self.status_label.setText(
 				"Evidence hash may only contain letters and numbers :: MAX length is 24"
@@ -451,6 +455,7 @@ class MainWindow(QMainWindow):
 			event,
 			self.users[self.current_user]["private_key"], self.users[self.current_user]["public_key"]
 		)
+
 		#update user authorized records 
 		self.users[self.current_user]["evidence_ids"].add(evidence_id)
 		self.status_label.setText("Evidence Added - Press back to verify chain ")
