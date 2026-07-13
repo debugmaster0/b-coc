@@ -375,11 +375,6 @@ class MainWindow(QMainWindow):
 			"signer_id": self.current_user
 		}
 
-		#make sure fields aren't empty
-		#if not evidence_id or not action or not evidence_hash:
-			#self.status_label.setText("Evidence ID, Action, and Hash are required.")
-			#return
-
 		chain = self.ledger.get_chain(evidence_id)
 		#check that evidence hash matches when uploading to exisiting evidence chain
 		if chain is not None:
@@ -399,14 +394,12 @@ class MainWindow(QMainWindow):
 		self.users[self.current_user]["evidence_ids"].add(evidence_id)
 		self.status_label.setText("Evidence Added _ Press back to verify chain ✓")
 
-# =====================================================
-# App Main
-# =====================================================
+# ------- Main -------
 
 def main():
 	app = QApplication(sys.argv)
-	app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyside6'))
-	app.setQuitOnLastWindowClosed(True)
+	app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyside6')) #darkmoode
+	app.setQuitOnLastWindowClosed(True) #quit on close
 	window = MainWindow()
 	window.show()
 	sys.exit(app.exec())

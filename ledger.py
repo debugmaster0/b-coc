@@ -5,12 +5,12 @@ from sign_util import sign_hash, verify_hash_signature
 from datetime import datetime, timezone
 import json
 
-# The EvidenceLedger manages multiple evidence blockchains.
+# The EvidenceLedger is a dictionary of evidence blockchains
 # Each evidence ID is associated with a separate chain of custody, while
-# global block IDs preserve block creation order in ledger.
-# Individual chains provide block-level integrity through hash links.
-# The ledger also maintains a cumulative SHA-256 state root hash calculated from
-# every block hash in global creation order, providing ledger integrity overall
+# global block IDs preserve block creation order in ledger
+# Individual chains provide block integrity through hash links
+# The ledger also maintains a SHA-256 state root hash calculated from
+# every block hash in global creation order
 class EvidenceLedger:
 	def __init__(self):
 		self.chains = {}
@@ -23,15 +23,15 @@ class EvidenceLedger:
 
 # Adds a signed block to the appropriate evidence chain.
 #
-# 1. Reads the structured event data and obtains its evidence ID.
+# 1. Reads the imported event data and obtains evidence ID.
 # 2. Creates a new evidence chain if the evidence ID does not exist.
-# 3. Calculates the next ledger-wide global block ID.
-# 4. Retrieves the latest block from the target evidence chain.
+# 3. Calculates the next global block ID.
+# 4. Retrieves the latest block from the target (target_block) evidence chain.
 # 5. Creates a new block using the event, global ID, and previous block.
 # 6. Signs the block hash and attaches the corresponding public key.
 # 7. Appends the signed block to the target evidence chain.
 # 8. Commits the new global block count.
-# 9. Updates the cumulative ledger state hash.
+# 9. Updates the ledger state hash.
 	def add_block(self, event, private_key=None, public_key=None):
 		evidence_id = event["evidence_id"]
 
@@ -68,22 +68,17 @@ class EvidenceLedger:
 
 # Validates evidence ledger.
 #
-# 1. Rejects validation if the ledger contains no blocks.
-# 2. Calls validate_chain() for each evidence-specific blockchain to verify:
-	# 1. Recalculate the block hash and compares it with the stored hash.
-    # 2. Verify the stored previous_hash matches the previous block.
-    # 3. Confirms that local block IDs are sequential.
-    # 4. Confirms that the genesis block has the expected format.
-# 3. Combines all blocks from every evidence chain into one list.
-# 4. Sorts the combined list by global_id to reconstruct the original
-#    ledger order in which blocks were created.
-# 5. Verifies that global IDs begin at 1 and remain sequential, allowing
-#    deleted or missing blocks to be detected.
-# 6. Verifies each block's digital signature using its stored public key.
-# 7. Recalculates the ledger state root hash in global id order.
-# 8. Compares the recalculated state root hash with the stored ledger state root.
+# 1. Rejects validation if the ledger contains no blocks
+# 2. Calls validate_chain() for each blockchain to verify:
+	# See blockchain.py for validate_chain()
+# 3. Combine all blocks from every evidence chain into one list
+# 4. Sort the combined list by global_id to reconstruct build order
+# 5. Verifies that global IDs begin at 1 and remain sequential
+# 6. Verifies each block's digital signature using its stored public key
+# 7. Recalculates the ledger state root hash in global id order
+# 8. Compares the recalculated state root hash with the stored ledger state root
 # 9. Returns True only if every chain, block sequence, signature, and
-#    ledger state value passes validation.
+#    ledger state value passes validation
 	def validate_ledger(self):
 		calculated_state_root = "0"
 		all_blocks = []
