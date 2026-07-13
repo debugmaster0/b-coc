@@ -2,17 +2,23 @@ from block import Block
 
 class Blockchain: 
     def __init__(self):
+        #stores blocks related to individual chain
         self.chain = []
 
-    #returns last block in local chain
+    #returns last block in local chain or none if empty
     def get_latest_block(self):
         if not self.chain:
             return None
         return self.chain[-1]
 
 
-    #validates chain by recalc and compare hash, 
-    #as well as current blocks previous hash with previous block hash
+    # Validates the integrity and ordering of the evidence chain.
+    #
+    # For each block
+    # 1. Recalculate the block hash and compares it with the stored hash.
+    # 2. Verify the stored previous_hash matches the previous block.
+    # 3. Confirms that local block IDs are sequential.
+    # 4. Confirms that the genesis block has the expected format.
     def validate_chain(self):
         if len(self.chain) == 0:
             return True 

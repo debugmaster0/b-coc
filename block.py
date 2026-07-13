@@ -1,62 +1,88 @@
-#block.py is the guts of the block chain. It holds meta data for chain of custody
+# block.py
+#
+# Defines the Block object used by each evidence blockchain.
+# A block stores chain of custody event metadata, maintains a link to the
+# previous block, and calculates a SHA-256 hash from its block header.
 
 import hashlib
-from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives import hashes
 import json
 from datetime import datetime, timezone
 
+
 class Block:
-	#event is meta data to store on block, global_id keeps track of placement for global sequence in ledger, previous block 
-	#allows for previous block.hash access
-	def __init__(self, event, global_id, previous_block=None):
-		self.global_id = global_id                               
+    # Creates a block from structured event data.
+    # event:
+    #     Dictionary containing evidence and chain of custody metadata.
+    # global_id:
+    #     Ledger sequence number representing the block's creation order.
+    # previous_block:
+    #     Previous block in the evidence chain. Its local block ID
+    #     and block hash are used to construct the new block's chain link.
+    def __init__(self, event, global_id, previous_block=None):
+        self.global_id = global_id
 
-		
-		if previous_block:
-			self.block_id = previous_block.block_id + 1				#local block ID based on previous block ID
-			self.previous_hash = previous_block.block_hash      	#previous hash pulled fromm previous block hash
-		else:				
-			self.block_id = 1										#local genisis block gets ID 1
-			self.previous_hash = "0"								#local genisis previous block hash is 0
-		
-		#evidence metadata, event is data from json to store on block for simulation purposes
-		self.evidence_id = event["evidence_id"]					
-		self.signer_id = event.get("signer_id") or event.get("device_id")		#non cryptographic unique identifier
-		self.signature = event.get("signature")									#cryptographic private signature uses ec-secp256
-		self.public_key = event.get("public_key")								#cryptographic public key 
-		self.source_type = event.get("source_type")								#meta data for initial evidence uploads (bodycam, cctv, etc)
-		self.evidence_hash = event.get("evidence_hash")							#cryptographic hash of evidencde
-		self.events = event.get("action")										#evidence transactions and interaction types (accessed, copied, analyzed, transferred)
-		self.timestamp = datetime.now(timezone.utc).isoformat()
-		
-		#block hash
-		self.block_hash = self.calculate_hash()									#hash of block header
+        if previous_block is not None:
+            # Local sequence number in evidence chain.
+            self.block_id = previous_block.block_id + 1
 
-	   
+            # Cryptographic link to the previous block.
+            self.previous_hash = previous_block.block_hash
+        else:
+            # The first block in an evidence chain is the genesis block.
+            self.block_id = 1
+            self.previous_hash = "0"
 
-	def calculate_hash(self):
-		block_header = {
-			"global_id": self.global_id,
-			"block_id": self.block_id,
-			"evidence_id": self.evidence_id,
-			"signer_id": self.signer_id,
-			"source_type": self.source_type,
-			"evidence_hash": self.evidence_hash,
-			#"timestamp": self.timestamp,										#time stamp was causing discrepencies in a test function (ldger 1 v ledger 2) 
-																				#so its commented out temporarily
-			"previous_hash": self.previous_hash,
-			"events": self.events,
-		}
-		encoded_data = json.dumps(block_header, sort_keys=True).encode()
-		return hashlib.sha256(encoded_data).hexdigest()
+        # Evidence ID for chain tracking in ledger
+        self.evidence_id = event["evidence_id"]
 
-	#not used yet but will be for adding custom blocks in gui
-	def sign_block(self, private_key):			
+        # Human users provide signer_id, while automated sources provide
+        # device_id. This identifies the source of the event.
+        self.signer_id = (
+            event.get("signer_id")
+            or event.get("device_id")
+        )
 
-		signature = private_key.sign(
-			self.block_hash.encode(),
-			ec.ECDSA(hashes.SHA256())
-		)
+        # Signature and public key are assigned by EvidenceLedger add_block()
+        # after the block hash has been calculated.
+        self.signature = None
+        self.public_key = None
 
-		self.signature = signature.hex()
+        # Evidence source, such as body camera or CCTV.
+        self.source_type = event.get("source_type")
+
+        # Hash of digital evidence represented by this block.
+        self.evidence_hash = event.get("evidence_hash")
+
+        # Chain of custody custody action, such as collected, accessed, analyzed,
+        # copied, stored, or transferred.
+        self.action = event.get("action")
+
+        # Record the block creation time in UTC.
+        self.timestamp = datetime.now(timezone.utc).isoformat()
+
+        # Calculate and store the SHA-256 hash of the block header.
+        self.block_hash = self.calculate_hash()
+
+    # Creates a deterministic SHA-256 hash of the block header.
+    #
+    # The metadata is serialized with sorted keys so that the same block
+    # values always produce the same serialized representation and hash.
+    def calculate_hash(self):
+        block_header = {
+            "global_id": self.global_id,
+            "block_id": self.block_id,
+            "evidence_id": self.evidence_id,
+            "signer_id": self.signer_id,
+            "source_type": self.source_type,
+            "evidence_hash": self.evidence_hash,
+            "timestamp": self.timestamp,
+            "previous_hash": self.previous_hash,
+            "action": self.action,
+        }
+
+        encoded_data = json.dumps(
+            block_header,
+            sort_keys=True
+        ).encode()
+
+        return hashlib.sha256(encoded_data).hexdigest()

@@ -4,449 +4,580 @@
         "device_id": "dev_3Ab6",
         "source_type": "bodycam",
         "evidence_hash": "a4jf9",
-        "action": "evidence stored",
-        "public_key": "key-001",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_001",
         "signer_id": "officer_1",
         "source_type": "bodycam",
         "evidence_hash": "a4jf9",
-        "action": "accessed",
-        "public_key": "key-002",
-        "signature": null
+        "action": "accessed"
     },
     {
         "evidence_id": "evidence_001",
         "signer_id": "officer_1",
         "source_type": "bodycam",
         "evidence_hash": "a4jf9",
-        "action": "exported",
-        "public_key": "key-002",
-        "signature": null
+        "action": "transferred to forensics_1"
+    },
+    {
+        "evidence_id": "evidence_001",
+        "signer_id": "forensics_1",
+        "source_type": "bodycam",
+        "evidence_hash": "a4jf9",
+        "action": "accepted transfer"
+    },
+    {
+        "evidence_id": "evidence_001",
+        "signer_id": "forensics_1",
+        "source_type": "bodycam",
+        "evidence_hash": "a4jf9",
+        "action": "analyzed"
+    },
+    {
+        "evidence_id": "evidence_001",
+        "signer_id": "detective_2",
+        "source_type": "bodycam",
+        "evidence_hash": "a4jf9",
+        "action": "accessed"
     },
     {
         "evidence_id": "evidence_002",
         "device_id": "dev_45fw",
         "source_type": "dashcam",
         "evidence_hash": "b8ke2",
-        "action": "evidence stored",
-        "public_key": "key-003",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_002",
         "signer_id": "officer_2",
         "source_type": "dashcam",
         "evidence_hash": "b8ke2",
-        "action": "accessed",
-        "public_key": "key-004",
-        "signature": null
+        "action": "accessed"
+    },
+    {
+        "evidence_id": "evidence_002",
+        "signer_id": "officer_2",
+        "source_type": "dashcam",
+        "evidence_hash": "b8ke2",
+        "action": "transferred to detective_1"
     },
     {
         "evidence_id": "evidence_002",
         "signer_id": "detective_1",
         "source_type": "dashcam",
         "evidence_hash": "b8ke2",
-        "action": "downloaded",
-        "public_key": "key-005",
-        "signature": null
+        "action": "accepted transfer"
     },
     {
         "evidence_id": "evidence_002",
         "signer_id": "detective_1",
         "source_type": "dashcam",
         "evidence_hash": "b8ke2",
-        "action": "verified",
-        "public_key": "key-005",
-        "signature": null
+        "action": "imaged"
+    },
+    {
+        "evidence_id": "evidence_002",
+        "signer_id": "detective_1",
+        "source_type": "dashcam",
+        "evidence_hash": "b8ke2",
+        "action": "downloaded"
     },
     {
         "evidence_id": "evidence_003",
         "device_id": "cam_110",
         "source_type": "cctv",
         "evidence_hash": "c91dd",
-        "action": "evidence stored",
-        "public_key": "key-006",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_003",
         "signer_id": "officer_3",
         "source_type": "cctv",
         "evidence_hash": "c91dd",
-        "action": "accessed",
-        "public_key": "key-007",
-        "signature": null
+        "action": "accessed"
+    },
+    {
+        "evidence_id": "evidence_003",
+        "signer_id": "detective_2",
+        "source_type": "cctv",
+        "evidence_hash": "c91dd",
+        "action": "accessed"
+    },
+    {
+        "evidence_id": "evidence_003",
+        "signer_id": "detective_2",
+        "source_type": "cctv",
+        "evidence_hash": "c91dd",
+        "action": "transferred to lab_tech_1"
     },
     {
         "evidence_id": "evidence_003",
         "signer_id": "lab_tech_1",
         "source_type": "cctv",
         "evidence_hash": "c91dd",
-        "action": "analyzed",
-        "public_key": "key-008",
-        "signature": null
+        "action": "accepted transfer"
+    },
+    {
+        "evidence_id": "evidence_003",
+        "signer_id": "lab_tech_1",
+        "source_type": "cctv",
+        "evidence_hash": "c91dd",
+        "action": "analyzed"
     },
     {
         "evidence_id": "evidence_003",
         "signer_id": "prosecutor_1",
         "source_type": "cctv",
         "evidence_hash": "c91dd",
-        "action": "reviewed",
-        "public_key": "key-009",
-        "signature": null
+        "action": "reviewed"
     },
     {
         "evidence_id": "evidence_004",
         "device_id": "phone_A12",
         "source_type": "mobile",
         "evidence_hash": "d771a",
-        "action": "evidence stored",
-        "public_key": "key-010",
-        "signature": null
-    },
-    {
-        "evidence_id": "evidence_004",
-        "signer_id": "examiner_1",
-        "source_type": "mobile",
-        "evidence_hash": "d771a",
-        "action": "imaged",
-        "public_key": "key-011",
-        "signature": null
-    },
-    {
-        "evidence_id": "evidence_004",
-        "signer_id": "examiner_1",
-        "source_type": "mobile",
-        "evidence_hash": "d771a",
-        "action": "verified",
-        "public_key": "key-011",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_004",
         "signer_id": "officer_4",
         "source_type": "mobile",
         "evidence_hash": "d771a",
-        "action": "returned",
-        "public_key": "key-012",
-        "signature": null
+        "action": "submitted for forensic imaging"
+    },
+    {
+        "evidence_id": "evidence_004",
+        "signer_id": "examiner_1",
+        "source_type": "mobile",
+        "evidence_hash": "d771a",
+        "action": "accepted transfer"
+    },
+    {
+        "evidence_id": "evidence_004",
+        "signer_id": "examiner_1",
+        "source_type": "mobile",
+        "evidence_hash": "d771a",
+        "action": "imaged"
+    },
+    {
+        "evidence_id": "evidence_004",
+        "signer_id": "examiner_1",
+        "source_type": "mobile",
+        "evidence_hash": "d771a",
+        "action": "verified"
+    },
+    {
+        "evidence_id": "evidence_004",
+        "signer_id": "detective_2",
+        "source_type": "mobile",
+        "evidence_hash": "d771a",
+        "action": "reviewed extraction"
+    },
+    {
+        "evidence_id": "evidence_004",
+        "signer_id": "officer_4",
+        "source_type": "mobile",
+        "evidence_hash": "d771a",
+        "action": "accessed"
     },
     {
         "evidence_id": "evidence_005",
         "device_id": "drone_9",
         "source_type": "drone",
         "evidence_hash": "ea512",
-        "action": "evidence stored",
-        "public_key": "key-013",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_005",
         "signer_id": "pilot_1",
         "source_type": "drone",
         "evidence_hash": "ea512",
-        "action": "uploaded",
-        "public_key": "key-014",
-        "signature": null
+        "action": "uploaded"
     },
     {
         "evidence_id": "evidence_005",
-        "signer_id": "investigator_2",
+        "signer_id": "pilot_1",
         "source_type": "drone",
         "evidence_hash": "ea512",
-        "action": "accessed",
-        "public_key": "key-015",
-        "signature": null
+        "action": "transferred to detective_2"
     },
     {
         "evidence_id": "evidence_005",
-        "signer_id": "investigator_2",
+        "signer_id": "detective_2",
         "source_type": "drone",
         "evidence_hash": "ea512",
-        "action": "exported",
-        "public_key": "key-015",
-        "signature": null
+        "action": "accepted transfer"
+    },
+    {
+        "evidence_id": "evidence_005",
+        "signer_id": "detective_2",
+        "source_type": "drone",
+        "evidence_hash": "ea512",
+        "action": "accessed"
+    },
+    {
+        "evidence_id": "evidence_005",
+        "signer_id": "detective_2",
+        "source_type": "drone",
+        "evidence_hash": "ea512",
+        "action": "exported"
+    },
+    {
+        "evidence_id": "evidence_005",
+        "signer_id": "prosecutor_1",
+        "source_type": "drone",
+        "evidence_hash": "ea512",
+        "action": "reviewed"
     },
     {
         "evidence_id": "evidence_006",
         "device_id": "cam_552",
         "source_type": "security camera",
         "evidence_hash": "f0c33",
-        "action": "evidence stored",
-        "public_key": "key-016",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_006",
         "signer_id": "officer_5",
         "source_type": "security camera",
         "evidence_hash": "f0c33",
-        "action": "reviewed",
-        "public_key": "key-017",
-        "signature": null
+        "action": "reviewed"
     },
     {
         "evidence_id": "evidence_006",
         "signer_id": "detective_2",
         "source_type": "security camera",
         "evidence_hash": "f0c33",
-        "action": "downloaded",
-        "public_key": "key-018",
-        "signature": null
+        "action": "accepted transfer"
+    },
+    {
+        "evidence_id": "evidence_006",
+        "signer_id": "detective_2",
+        "source_type": "security camera",
+        "evidence_hash": "f0c33",
+        "action": "downloaded"
+    },
+    {
+        "evidence_id": "evidence_006",
+        "signer_id": "forensics_1",
+        "source_type": "security camera",
+        "evidence_hash": "f0c33",
+        "action": "reviewed copy"
     },
     {
         "evidence_id": "evidence_007",
         "device_id": "cam_777",
         "source_type": "bodycam",
         "evidence_hash": "g8ab1",
-        "action": "evidence stored",
-        "public_key": "key-019",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_007",
         "signer_id": "officer_6",
         "source_type": "bodycam",
         "evidence_hash": "g8ab1",
-        "action": "accessed",
-        "public_key": "key-020",
-        "signature": null
+        "action": "accessed"
     },
     {
         "evidence_id": "evidence_007",
         "signer_id": "officer_6",
         "source_type": "bodycam",
         "evidence_hash": "g8ab1",
-        "action": "verified",
-        "public_key": "key-020",
-        "signature": null
+        "action": "verified"
+    },
+    {
+        "evidence_id": "evidence_007",
+        "signer_id": "detective_1",
+        "source_type": "bodycam",
+        "evidence_hash": "g8ab1",
+        "action": "reviewed"
     },
     {
         "evidence_id": "evidence_008",
         "device_id": "cam_889",
         "source_type": "bodycam",
         "evidence_hash": "h991e",
-        "action": "evidence stored",
-        "public_key": "key-021",
-        "signature": null
+        "action": "evidence stored"
+    },
+    {
+        "evidence_id": "evidence_008",
+        "signer_id": "officer_1",
+        "source_type": "bodycam",
+        "evidence_hash": "h991e",
+        "action": "submitted to lab"
     },
     {
         "evidence_id": "evidence_008",
         "signer_id": "lab_tech_2",
         "source_type": "bodycam",
         "evidence_hash": "h991e",
-        "action": "analyzed",
-        "public_key": "key-022",
-        "signature": null
+        "action": "accepted transfer"
+    },
+    {
+        "evidence_id": "evidence_008",
+        "signer_id": "lab_tech_2",
+        "source_type": "bodycam",
+        "evidence_hash": "h991e",
+        "action": "analyzed"
     },
     {
         "evidence_id": "evidence_008",
         "signer_id": "prosecutor_2",
         "source_type": "bodycam",
         "evidence_hash": "h991e",
-        "action": "reviewed",
-        "public_key": "key-023",
-        "signature": null
+        "action": "reviewed"
     },
     {
         "evidence_id": "evidence_009",
         "device_id": "server_2",
         "source_type": "server logs",
         "evidence_hash": "i554d",
-        "action": "evidence stored",
-        "public_key": "key-024",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_009",
         "signer_id": "analyst_1",
         "source_type": "server logs",
         "evidence_hash": "i554d",
-        "action": "parsed",
-        "public_key": "key-025",
-        "signature": null
+        "action": "parsed"
     },
     {
         "evidence_id": "evidence_009",
         "signer_id": "analyst_1",
         "source_type": "server logs",
         "evidence_hash": "i554d",
-        "action": "verified",
-        "public_key": "key-025",
-        "signature": null
+        "action": "verified"
+    },
+    {
+        "evidence_id": "evidence_009",
+        "signer_id": "detective_3",
+        "source_type": "server logs",
+        "evidence_hash": "i554d",
+        "action": "reviewed logs"
+    },
+    {
+        "evidence_id": "evidence_009",
+        "signer_id": "prosecutor_3",
+        "source_type": "server logs",
+        "evidence_hash": "i554d",
+        "action": "accepted"
     },
     {
         "evidence_id": "evidence_010",
         "device_id": "laptop_17",
         "source_type": "computer",
         "evidence_hash": "j731c",
-        "action": "evidence stored",
-        "public_key": "key-026",
-        "signature": null
+        "action": "evidence stored"
+    },
+    {
+        "evidence_id": "evidence_010",
+        "signer_id": "detective_1",
+        "source_type": "computer",
+        "evidence_hash": "j731c",
+        "action": "submitted for imaging"
     },
     {
         "evidence_id": "evidence_010",
         "signer_id": "examiner_2",
         "source_type": "computer",
         "evidence_hash": "j731c",
-        "action": "imaged",
-        "public_key": "key-027",
-        "signature": null
+        "action": "accepted transfer"
     },
     {
         "evidence_id": "evidence_010",
         "signer_id": "examiner_2",
         "source_type": "computer",
         "evidence_hash": "j731c",
-        "action": "hash verified",
-        "public_key": "key-027",
-        "signature": null
+        "action": "imaged"
+    },
+    {
+        "evidence_id": "evidence_010",
+        "signer_id": "examiner_2",
+        "source_type": "computer",
+        "evidence_hash": "j731c",
+        "action": "hash verified"
+    },
+    {
+        "evidence_id": "evidence_010",
+        "signer_id": "prosecutor_2",
+        "source_type": "computer",
+        "evidence_hash": "j731c",
+        "action": "reviewed"
     },
     {
         "evidence_id": "evidence_011",
         "device_id": "phone_X9",
         "source_type": "mobile",
         "evidence_hash": "k832f",
-        "action": "evidence stored",
-        "public_key": "key-028",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_011",
         "signer_id": "officer_7",
         "source_type": "mobile",
         "evidence_hash": "k832f",
-        "action": "accessed",
-        "public_key": "key-029",
-        "signature": null
+        "action": "accessed"
+    },
+    {
+        "evidence_id": "evidence_011",
+        "signer_id": "officer_7",
+        "source_type": "mobile",
+        "evidence_hash": "k832f",
+        "action": "transferred to lab_tech_3"
     },
     {
         "evidence_id": "evidence_011",
         "signer_id": "lab_tech_3",
         "source_type": "mobile",
         "evidence_hash": "k832f",
-        "action": "analyzed",
-        "public_key": "key-030",
-        "signature": null
+        "action": "accepted transfer"
+    },
+    {
+        "evidence_id": "evidence_011",
+        "signer_id": "lab_tech_3",
+        "source_type": "mobile",
+        "evidence_hash": "k832f",
+        "action": "analyzed"
+    },
+    {
+        "evidence_id": "evidence_011",
+        "signer_id": "detective_2",
+        "source_type": "mobile",
+        "evidence_hash": "k832f",
+        "action": "reviewed analysis"
     },
     {
         "evidence_id": "evidence_012",
         "device_id": "cam_991",
         "source_type": "traffic camera",
         "evidence_hash": "l117e",
-        "action": "evidence stored",
-        "public_key": "key-031",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_012",
         "signer_id": "officer_8",
         "source_type": "traffic camera",
         "evidence_hash": "l117e",
-        "action": "reviewed",
-        "public_key": "key-032",
-        "signature": null
+        "action": "reviewed"
+    },
+    {
+        "evidence_id": "evidence_012",
+        "signer_id": "detective_3",
+        "source_type": "traffic camera",
+        "evidence_hash": "l117e",
+        "action": "downloaded"
     },
     {
         "evidence_id": "evidence_012",
         "signer_id": "court_clerk_1",
         "source_type": "traffic camera",
         "evidence_hash": "l117e",
-        "action": "archived",
-        "public_key": "key-033",
-        "signature": null
+        "action": "archived"
     },
     {
         "evidence_id": "evidence_013",
         "device_id": "bodycam_15",
         "source_type": "bodycam",
         "evidence_hash": "m773b",
-        "action": "evidence stored",
-        "public_key": "key-034",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_013",
         "signer_id": "officer_9",
         "source_type": "bodycam",
         "evidence_hash": "m773b",
-        "action": "accessed",
-        "public_key": "key-035",
-        "signature": null
+        "action": "accessed"
     },
     {
         "evidence_id": "evidence_013",
         "signer_id": "officer_9",
         "source_type": "bodycam",
         "evidence_hash": "m773b",
-        "action": "exported",
-        "public_key": "key-035",
-        "signature": null
+        "action": "exported"
+    },
+    {
+        "evidence_id": "evidence_013",
+        "signer_id": "detective_1",
+        "source_type": "bodycam",
+        "evidence_hash": "m773b",
+        "action": "reviewed"
+    },
+    {
+        "evidence_id": "evidence_013",
+        "signer_id": "prosecutor_1",
+        "source_type": "bodycam",
+        "evidence_hash": "m773b",
+        "action": "reviewed"
     },
     {
         "evidence_id": "evidence_014",
         "device_id": "doorcam_8",
         "source_type": "security camera",
         "evidence_hash": "n219d",
-        "action": "evidence stored",
-        "public_key": "key-036",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_014",
         "signer_id": "detective_3",
         "source_type": "security camera",
         "evidence_hash": "n219d",
-        "action": "reviewed",
-        "public_key": "key-037",
-        "signature": null
+        "action": "reviewed"
+    },
+    {
+        "evidence_id": "evidence_014",
+        "signer_id": "detective_3",
+        "source_type": "security camera",
+        "evidence_hash": "n219d",
+        "action": "transferred to court_clerk_2"
     },
     {
         "evidence_id": "evidence_014",
         "signer_id": "court_clerk_2",
         "source_type": "security camera",
         "evidence_hash": "n219d",
-        "action": "submitted to court",
-        "public_key": "key-038",
-        "signature": null
+        "action": "accepted transfer"
+    },
+    {
+        "evidence_id": "evidence_014",
+        "signer_id": "court_clerk_2",
+        "source_type": "security camera",
+        "evidence_hash": "n219d",
+        "action": "submitted to court"
     },
     {
         "evidence_id": "evidence_015",
         "device_id": "server_9",
         "source_type": "network logs",
         "evidence_hash": "p500a",
-        "action": "evidence stored",
-        "public_key": "key-039",
-        "signature": null
+        "action": "evidence stored"
     },
     {
         "evidence_id": "evidence_015",
         "signer_id": "analyst_2",
         "source_type": "network logs",
         "evidence_hash": "p500a",
-        "action": "analyzed",
-        "public_key": "key-040",
-        "signature": null
+        "action": "analyzed"
     },
     {
         "evidence_id": "evidence_015",
         "signer_id": "analyst_2",
         "source_type": "network logs",
         "evidence_hash": "p500a",
-        "action": "verified",
-        "public_key": "key-040",
-        "signature": null
+        "action": "verified"
+    },
+    {
+        "evidence_id": "evidence_015",
+        "signer_id": "detective_2",
+        "source_type": "network logs",
+        "evidence_hash": "p500a",
+        "action": "reviewed logs"
     },
     {
         "evidence_id": "evidence_015",
         "signer_id": "prosecutor_3",
         "source_type": "network logs",
         "evidence_hash": "p500a",
-        "action": "accepted",
-        "public_key": "key-041",
-        "signature": null
+        "action": "accepted"
     }
 ]

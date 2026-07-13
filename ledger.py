@@ -1,11 +1,16 @@
-import hashlib
-from block import Block
-from blockchain import Blockchain
-from sign_util import sign_hash, verify_hash_signature
+import hashlib 
+from block import Block 
+from blockchain import Blockchain 
+from sign_util import sign_hash, verify_hash_signature 
 from datetime import datetime, timezone
 import json
 
-
+# The EvidenceLedger manages multiple evidence blockchains.
+# Each evidence ID is associated with a separate chain of custody, while
+# global block IDs preserve block creation order in ledger.
+# Individual chains provide block-level integrity through hash links.
+# The ledger also maintains a cumulative SHA-256 state root hash calculated from
+# every block hash in global creation order, providing ledger integrity overall
 class EvidenceLedger:
 	def __init__(self):
 		self.chains = {}
@@ -13,59 +18,93 @@ class EvidenceLedger:
 		self.global_block_count = 0  # Tracks absolute creation order
 
 	def create_chain(self, evidence_id):
+		#sub chains are tracked using evidence Id
 		self.chains[evidence_id] = Blockchain()
 
-	def add_block(self, event, private_key=None):
+# Adds a signed block to the appropriate evidence chain.
+#
+# 1. Reads the structured event data and obtains its evidence ID.
+# 2. Creates a new evidence chain if the evidence ID does not exist.
+# 3. Calculates the next ledger-wide global block ID.
+# 4. Retrieves the latest block from the target evidence chain.
+# 5. Creates a new block using the event, global ID, and previous block.
+# 6. Signs the block hash and attaches the corresponding public key.
+# 7. Appends the signed block to the target evidence chain.
+# 8. Commits the new global block count.
+# 9. Updates the cumulative ledger state hash.
+	def add_block(self, event, private_key=None, public_key=None):
 		evidence_id = event["evidence_id"]
 
-		#if evidence is now, create new chain
+		#if evidence is new, create new chain
 		if evidence_id not in self.chains:
 			self.create_chain(evidence_id)
 
 		#adding block so global counter is increased (always greater than 0 if ledger exists)
-		self.global_block_count += 1
+		next_global_id = self.global_block_count + 1
 		
-		#find the chain the record belongs to, returns none if no self chain. 
+		#find the chain the record belongs to and pull the last added block
 		target_blockchain = self.chains[evidence_id]
 		latest_block = target_blockchain.get_latest_block()
 
-		#create block, global_block_count is passed into block for its global ID, latest block used to get hash
-		new_block = Block(event, self.global_block_count, previous_block=latest_block)
+		#New Block creation
+		#create block, global_block_count is passed into block for its global ID
+		#latest block used to get hash
+		new_block = Block(event, next_global_id, previous_block=latest_block)
 
-		####################################################
-		#####need to rework signature workflow for gui#######
-		#####################################################
-		if private_key:
+		#adds signatures to block, see sign_util.py for sign_hash
+		if private_key and public_key:
 			new_block.signature = sign_hash(new_block.block_hash, private_key)
+			new_block.public_key = public_key
 		
 		#append block
 		target_blockchain.chain.append(new_block)
+
+		self.global_block_count = next_global_id
 		
-		#This updates the state root hash for the ledger
+		#This updates the state root hash for the ledger by adding new block hash to state root
+		#and hashing it using sha256
 		state_mix = f"{self.ledger_state_root}{new_block.block_hash}"
 		self.ledger_state_root = hashlib.sha256(state_mix.encode()).hexdigest()
 
-#Checks individual chain integrity with validate chain, then sorts blocks by global_id, if the id's arent sequenctual
-#or calculated state root (root hash) doesnt match, its invalid. 
+# Validates evidence ledger.
+#
+# 1. Rejects validation if the ledger contains no blocks.
+# 2. Calls validate_chain() for each evidence-specific blockchain to verify:
+	# 1. Recalculate the block hash and compares it with the stored hash.
+    # 2. Verify the stored previous_hash matches the previous block.
+    # 3. Confirms that local block IDs are sequential.
+    # 4. Confirms that the genesis block has the expected format.
+# 3. Combines all blocks from every evidence chain into one list.
+# 4. Sorts the combined list by global_id to reconstruct the original
+#    ledger order in which blocks were created.
+# 5. Verifies that global IDs begin at 1 and remain sequential, allowing
+#    deleted or missing blocks to be detected.
+# 6. Verifies each block's digital signature using its stored public key.
+# 7. Recalculates the ledger state root hash in global id order.
+# 8. Compares the recalculated state root hash with the stored ledger state root.
+# 9. Returns True only if every chain, block sequence, signature, and
+#    ledger state value passes validation.
 	def validate_ledger(self):
 		calculated_state_root = "0"
 		all_blocks = []
 		
 		if self.global_block_count == 0:
-			print("Ledger is empty. Import events first.")
+			print("Ledger is empty. Import first.")
 			return False
 			
-		# Step 1: Validate individual chains
+		#Validate individual chains accessed by evidence_id
 		for evidence_id, blockchain in self.chains.items():
 
 			if not blockchain.validate_chain():
 				print(f"Invalid chain structural integrity: {evidence_id}")
 				return False
 
-			# create single list of ALL blocks, important to use global ID for sorting because validation was messy otherwise
+			# create single list of ALL blocks, important to use global ID for sorting 
 			all_blocks.extend(blockchain.chain)
 			
-		#state root is estblished by hashing blocks FIFO, they are sorted by global_id to maintain that structure for hashing
+		#sorts the extended list by global id
+		#state root is estblished by hashing blocks FIFO, 
+		#they are sorted by global_id to maintain that structure for hashing
 		all_blocks.sort(key=lambda blk: blk.global_id)
 		
 		#Recalc state root in the exact order they were created
@@ -74,11 +113,32 @@ class EvidenceLedger:
 			if block.global_id != expctd_glbl_id:
 				print(f"Validation failed: Missing/deleted block at sequence {expctd_glbl_id}")
 				return False
-				
-			state_mix = f"{calculated_state_root}{block.block_hash}" #acts like a merkle root hash
+
+			#for gui validation output
+			signature_valid = verify_hash_signature(
+				block.block_hash,
+				block.signature,
+				block.public_key
+			)
+			if not signature_valid:
+				print(
+					f"Validation failed: Invalid signature on "
+					f"block {block.global_id}"
+				)
+				return False
+
+			print(
+				f"Block {block.global_id} | "
+				f"Signer: {block.signer_id} | "
+				f"Signature Verified ✓"
+			)
+			print(f"VALID ✓ VALID ✓ VALID ✓ VALID ✓")
+
+			#state mix is current state_root hash + block hash 
+			state_mix = f"{calculated_state_root}{block.block_hash}" 
 			calculated_state_root = hashlib.sha256(state_mix.encode()).hexdigest()
 			
-		#compare stored state root vs recalc state root
+		#compare state root vs recalc final state root
 		if calculated_state_root != self.ledger_state_root:
 			print("Ledger verification failed: Chain or block is missing")
 			return False
@@ -88,10 +148,17 @@ class EvidenceLedger:
 		return True
 
 #this function creates a state snapshot to send to another ledger node for validation checks
+#I did not utilize this feature in the gui
 	def create_validation_checkpoint(self, validator_id, private_key):
+
+		#no self ledger to verify
 		if not self.validate_ledger():
 			return None
 
+		#checkpoint contains id of validator user
+		#ledger state root
+		#timestamp
+		#and signed hash using validator user private key
 		checkpoint = {
 			"validator_id": validator_id,
 			"ledger_state_root": self.ledger_state_root,
@@ -114,10 +181,12 @@ class EvidenceLedger:
 		print("self type:    ", type(self.ledger_state_root))
 		print("equal?:       ", received_root == self.ledger_state_root)
 
+		#if state roots don't match
 		if received_root != self.ledger_state_root:
 			print("Ledger state root mismatch")
 			return False
 
+		#if signature is not valid
 		if not verify_hash_signature(
 			received_root,
 			checkpoint["signature"],
@@ -126,6 +195,7 @@ class EvidenceLedger:
 			print("Validator signature invalid")
 			return False
 
+		#else all good
 		print("Validation checkpoint verified")
 		return True
 
@@ -136,7 +206,7 @@ class EvidenceLedger:
 
 			for i, block in enumerate(blockchain.chain):
 				print(f"  Block {i}")
-				print(f"    action: {block.events}")
+				print(f"    action: {block.actions}")
 				print(f"    source: {block.source_type}")
 				print(f"    signer_id: {block.signer_id}")
 				print(f"    public_key: {block.public_key}")
@@ -147,7 +217,11 @@ class EvidenceLedger:
 				print(f"    previous_hash: {block.previous_hash}")
 				print(f"    block_hash: {block.block_hash}")
 
-	#simulates database
+	#returns item chain from ledger
+	def get_chain(self, evidence_id):
+		return self.chains.get(evidence_id)
+
+	#ledger export
 	def export_json(self, out_file):
 		data = {}
 
@@ -163,7 +237,9 @@ class EvidenceLedger:
 		with open(out_file, "w") as file:
 			json.dump(data, file, indent=2)
 
-	#simulates chain of custody actions for ledger creation or functions as database
+	#simulates chain of custody actions for ledger creation
 	def import_json(self, in_file):
 		with open(in_file, "r") as file:
 			data = json.load(file)
+
+
