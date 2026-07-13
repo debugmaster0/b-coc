@@ -304,7 +304,7 @@ class MainWindow(QMainWindow):
 			output += f"Block ID: {block.block_id}\n"
 			output += f"Block Hash: {block.block_hash}\n"
 			output += f"Previous Hash: {block.previous_hash}\n"
-			output += "-" * 40 + "\n"
+			output += "-------------------------------------\n"
 
 		self.output_box.setPlainText(output)
 
