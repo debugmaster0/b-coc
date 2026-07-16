@@ -13,10 +13,10 @@ class Blockchain:
 
 
     # Validates the integrity and ordering of the evidence chain
-    # 1. Recalculate the block hash and compare it with the stored hash
-    # 2. Verify the stored previous_hash matches the previous block
-    # 3. Confirm local block IDs are sequential
-    # 4. Confirm that the genesis block has expected values
+    # Recalculate the block hash and compare it with the stored hash
+    # Verify the stored previous_hash matches the previous block
+    # Confirm local block IDs are sequential
+    # Confirm that the genesis block has expected values
     def validate_chain(self):
         if len(self.chain) == 0:
             return True 

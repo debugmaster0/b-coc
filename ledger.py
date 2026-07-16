@@ -23,15 +23,15 @@ class EvidenceLedger:
 
 # Adds a signed block to the appropriate evidence chain.
 #
-# 1. Reads the imported event data and obtains evidence ID.
-# 2. Creates a new evidence chain if the evidence ID does not exist.
-# 3. Calculates the next global block ID.
-# 4. Retrieves the latest block from the target (target_block) evidence chain.
-# 5. Creates a new block using the event, global ID, and previous block.
-# 6. Signs the block hash and attaches the corresponding public key.
-# 7. Appends the signed block to the target evidence chain.
-# 8. Commits the new global block count.
-# 9. Updates the ledger state hash.
+# Reads the imported event data and obtains evidence ID.
+# Creates a new evidence chain if the evidence ID does not exist.
+# Calculates the next global block ID.
+# Retrieves the latest block from the target (target_block) evidence chain.
+# Creates a new block using the event, global ID, and previous block.
+# Signs the block hash and attaches the corresponding public key.
+# Appends the signed block to the target evidence chain.
+# Commits the new global block count.
+# Updates the ledger state hash.
 	def add_block(self, event, private_key=None, public_key=None):
 		evidence_id = event["evidence_id"]
 
@@ -68,16 +68,16 @@ class EvidenceLedger:
 
 # Validates evidence ledger.
 #
-# 1. Rejects validation if the ledger contains no blocks
-# 2. Calls validate_chain() for each blockchain to verify:
+# Rejects validation if the ledger contains no blocks
+# Calls validate_chain() for each blockchain to verify:
 	# See blockchain.py for validate_chain()
-# 3. Combine all blocks from every evidence chain into one list
-# 4. Sort the combined list by global_id to reconstruct build order
-# 5. Verifies that global IDs begin at 1 and remain sequential
-# 6. Verifies each block's digital signature using its stored public key
-# 7. Recalculates the ledger state root hash in global id order
-# 8. Compares the recalculated state root hash with the stored ledger state root
-# 9. Returns True only if every chain, block sequence, signature, and
+# Combine all blocks from every evidence chain into one list
+# Sort the combined list by global_id to reconstruct build order
+# Verifies that global IDs begin at 1 and remain sequential
+# Verifies each block's digital signature using its stored public key
+# Recalculates the ledger state root hash in global id order
+# Compares the recalculated state root hash with the stored ledger state root
+# Returns True only if every chain, block sequence, signature, and
 #    ledger state value passes validation
 	def validate_ledger(self):
 		calculated_state_root = "0"
@@ -221,14 +221,15 @@ class EvidenceLedger:
 	#ledger export
 	def export_json(self, out_file):
 		data = {}
-
+		#build dictionary with id as key, list of blocks 
+		#(chain) as value
 		for evidence_id, blockchain in self.chains.items():
 			data[evidence_id] = []
 
 			for block in blockchain.chain:
-
+				#create deep copy of block
+				#append block data (dictionary) to key-value
 				block_data = block.__dict__.copy()
-				block_data["signature"] = str(block_data["signature"])
 				data[evidence_id].append(block_data)
 
 		with open(out_file, "w") as file:

@@ -465,7 +465,7 @@ class MainWindow(QMainWindow):
 def main():
 	app = QApplication(sys.argv)
 	app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyside6')) #darkmoode
-	app.setQuitOnLastWindowClosed(True) #quit on close
+	#quit on close
 	window = MainWindow()
 	window.show()
 	sys.exit(app.exec())

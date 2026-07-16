@@ -77,9 +77,6 @@ class Block:
             "action": self.action,
         }
 
-        encoded_data = json.dumps(
-            block_header,
-            sort_keys=True
-        ).encode()
+        encoded_data = json.dumps(block_header).encode()
 
         return hashlib.sha256(encoded_data).hexdigest()
